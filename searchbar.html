@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Search Example</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      #search-input {
+        padding: 10px;
+        border: none;
+        border-bottom: 2px solid #ccc;
+        width: 80%;
+        font-size: 18px;
+      }
+      #search-input:focus {
+        outline: none;
+        border-bottom-color: #333;
+      }
+      #people-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 20px;
+      }
+      #people-list li {
+        padding: 10px;
+        cursor: pointer;
+      }
+      #people-list li:hover {
+        background-color: #eee;
+      }
+      .highlight {
+        color: red;
+      }
+      #person-details {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="text" id="search-input" placeholder="Search by name" />
+    <ul id="people-list"></ul>
+    <div id="person-details"></div>
+
+    <script>
+      const data = [
+        {name: "Ivan", age: "18", job: "CEO"},
+        {name: "Raymond", age: "28", job: "Software Engineer"},
+        {name: "Chris", age: "19", job: "Driver"},
+        {name: "Bob", age: "12", job: "Student"},
+        {name: "Ada", age: "24", job: "Teacher"},
+        {name: "David", age: "16", job: "Student"}
+      ];
+
+      const searchInput = document.querySelector('#search-input');
+      const peopleList = document.querySelector('#people-list');
+      const personDetails = document.querySelector('#person-details');
+
+      function updateList() {
+        const searchTerm = searchInput.value;
+        const filteredData = data.filter(person => person.name.includes(searchTerm));
+
+        peopleList.innerHTML = '';
+        filteredData.forEach(person => {
+          const li = document.createElement('li');
+          li.innerHTML = highlightSearchTerm(person.name, searchTerm);
+          li.addEventListener('click', () => showPersonDetails(person));
+          peopleList.appendChild(li);
+        });
+      }
+
+      function showPersonDetails(person) {
+        personDetails.innerHTML = `
+          <p>Name: ${person.name}</p>
+          <p>Age: ${person.age}</p>
+          <p>Job: ${person.job}</p>
+        `;
+      }
+
+      function highlightSearchTerm(text, searchTerm) {
+        if (!searchTerm) {
+          return text;
+        }
+        const index = text.indexOf(searchTerm);
+        if (index === -1) {
+          return text;
+        }
+        return `${text.slice(0, index)}<span class="highlight">${searchTerm}</span>${text.slice(index + searchTerm.length)}`;
+      }
+
+      searchInput.addEventListener('input', updateList);
+      updateList();
+    </script>
+  </body>
+</html>
